@@ -74,7 +74,18 @@ I kept the rules simple on purpose. Soil type matters (sandy soils need watering
 
 I decided to store the thresholds as named constants (`RAIN_THRESHOLD_MM`, `FROST_RISK_C`, `FROST_LIKELY_C`) instead of "magic numbers", so they are easy to find, explain and adjust.
 
+### Writing the code
+I pushed the project to GitHub, renamed the branch from `master` to `main`, and wrote the first code:
+- `src/postcode.js` gets the coordinates from postcodes.io.
+- `src/weather.js` gets the forecast from Open-Meteo.
+- `garden.js` connects them: the output of the first API (coordinates) becomes the input of the second (forecast).
+
+### Problems I ran into
+1. **`MODULE_NOT_FOUND` error.** I named a file `jarden.js` instead of `garden.js`. The error message showed the exact path Node was looking for, which helped me find the typo.
+   *Lesson:* the first line of an error usually tells you what is wrong; the `at ...` lines (stack trace) show where.
+2. **Following a stack trace.** When I tested an invalid postcode, the stack trace showed the error started in `postcode.js` line 5 and was called from `garden.js` line 4. I learned how to follow it back to the source.
+3. **Forecasts change during the day.** The rain values for the same days were different one hour later (2.5 mm became 0.7 mm). This means I can't test my rules with live data, so I will use fixed test data instead.
+
 ### Next steps
-- Push the project to GitHub
-- Write `postcode.js` and `weather.js` and connect them in `garden.js`
-- Turn the rules into code
+- Turn my gardening rules into code (`src/advice.js`)
+- Show clear recommendations instead of raw data
