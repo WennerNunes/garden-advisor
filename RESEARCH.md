@@ -42,3 +42,39 @@ I also chose a command-line app instead of a web page because it fits a DevOps r
 - Create the GitHub repository and push the project
 - Learn how to get coordinates from a postcode (postcodes.io API)
 - Learn how to get the weather forecast (Open-Meteo API)
+
+---
+
+## Day 2 – Exploring the APIs and defining the rules (10 Nov 2026)
+
+I didn't have access to my computer today, so I used my phone to prepare. I created the GitHub repository and explored both APIs in the browser before writing any code.
+
+### Creating the GitHub repository
+I created a public repository called `garden-advisor` without a README, .gitignore or licence. My project already exists on my computer, and if GitHub created files first, the two histories would be different and my first push would be rejected.
+
+### Exploring postcodes.io
+I opened `https://api.postcodes.io/postcodes/WD31AA` in the browser to understand the response before writing code.
+- The response has dozens of fields (region, district, NHS area...), but my code only needs two: latitude and longitude. Taking only what I need keeps the code simple and easier to test.
+- I learned how nested JSON works: `data.result.latitude` means "inside the response, go into `result`, and take `latitude`".
+- I tested an invalid postcode (`XX99XX`). It returned status **404** with the message "Postcode not found". In code, `response.ok` is false for this, so I can show a clear error message instead of crashing.
+
+### Exploring Open-Meteo
+I opened the forecast URL with `daily=temperature_2m_min,temperature_2m_max,precipitation_sum` and `past_days=1`.
+- The `daily` object has **parallel arrays**: position 0 in each list is the same day.
+- With `past_days=1`, position 0 is yesterday and position 1 is today. This lets me know how much it rained in the last 24 hours.
+- The API adjusts the coordinates slightly to the nearest point in its grid, and returns the units in `daily_units` (°C and mm).
+- Real data showed a frost risk (-0.1°C) on Saturday, which confirmed the tool is useful.
+
+### Defining the gardening rules
+The rules come from my 8 years as a gardener:
+- **Watering:** skip watering after 10 mm or more of rain in 24 hours. If heavy rain is expected tomorrow, it's better to wait. Otherwise, the tool suggests checking soil moisture before watering.
+- **Frost:** take precautions at **2°C or below**, because ground frost can happen while the air is still slightly above zero. At **0°C or below**, frost is likely, especially for tender plants, new shrubs and pots.
+
+I kept the rules simple on purpose. Soil type matters (sandy soils need watering more often, clay soils hold moisture longer), but I left it as a future improvement.
+
+I decided to store the thresholds as named constants (`RAIN_THRESHOLD_MM`, `FROST_RISK_C`, `FROST_LIKELY_C`) instead of "magic numbers", so they are easy to find, explain and adjust.
+
+### Next steps
+- Push the project to GitHub
+- Write `postcode.js` and `weather.js` and connect them in `garden.js`
+- Turn the rules into code
