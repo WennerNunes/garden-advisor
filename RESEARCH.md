@@ -86,6 +86,27 @@ I pushed the project to GitHub, renamed the branch from `master` to `main`, and 
 2. **Following a stack trace.** When I tested an invalid postcode, the stack trace showed the error started in `postcode.js` line 5 and was called from `garden.js` line 4. I learned how to follow it back to the source.
 3. **Forecasts change during the day.** The rain values for the same days were different one hour later (2.5 mm became 0.7 mm). This means I can't test my rules with live data, so I will use fixed test data instead.
 
-### Next steps
-- Turn my gardening rules into code (`src/advice.js`)
-- Show clear recommendations instead of raw data
+## Day 3 – Wednesday 11 November 2026
+
+### What I built
+- `src/advice.js`: watering and frost rules as pure functions. They take the Open-Meteo `daily` object and return advice text, with no API calls inside.
+- `test/advice.test.js`: 9 tests using Node's built-in test runner (`node --test`).
+- `garden.js`: connected the rules to the APIs and printed a readable summary.
+- Clean error messages and exit codes (brought forward from Thursday's plan).
+
+### Key decisions
+- **Fixed test data.** The live forecast changes during the day, so the tests use hand-written `daily` objects in the same shape as the API response. Tests are fast, repeatable and do not need the internet.
+- **Testing the boundaries.** Separate tests for exactly 10 mm, 0°C and 2°C confirm the rules use `>=` and `<=` as intended.
+- **Tomorrow's minimum for frost.** Open-Meteo's daily minimum runs from midnight to midnight, so tonight's frost (in the early hours) appears in tomorrow's value (index 2).
+- **Order of checks.** "Frost likely" (≤ 0°C) is checked before "Frost risk" (≤ 2°C). Otherwise, -3°C would only produce the weaker warning.
+- **`null` means no frost warning.** Watering always has advice; frost only appears when there is a risk.
+- **Data before advice.** The output shows rain and temperatures first, so the user can see why they got that advice.
+
+### Error handling
+- **Missing postcode:** checked before any API call, with a usage example.
+- **Unknown postcode:** one clear line instead of a stack trace.
+- **No internet:** Node's "fetch failed" is turned into a helpful message.
+- Errors go to `console.error` and the program exits with code 1, so scripts and CI can detect a failure (checked with `echo $LASTEXITCODE`).
+
+### Next
+- GitHub Actions workflow to run the tests on every push.
