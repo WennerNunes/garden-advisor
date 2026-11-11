@@ -3,21 +3,37 @@ import { getForecast } from './src/weather.js';
 import { getWateringAdvice, getFrostAdvice } from './src/advice.js';
 
 const postcode = process.argv[2];
-const { lat, lon } = await getCoordinates(postcode);
-const forecast = await getForecast(lat, lon);
 
-const watering = getWateringAdvice(forecast);
-const frost = getFrostAdvice(forecast);
+if (!postcode) {
+  console.error('Please provide a UK postcode.');
+  console.error('Usage: node garden.js "SW1A 1AA"');
+  process.exit(1);
+}
 
-const rain = forecast.precipitation_sum;
-const minTemp = forecast.temperature_2m_min[2];
-const maxTemp = forecast.temperature_2m_max[2];
+try {
+  const { lat, lon } = await getCoordinates(postcode);
+  const forecast = await getForecast(lat, lon);
 
-console.log(`\nGarden advice for ${postcode.toUpperCase()}\n`);
-console.log(`Rain: yesterday ${rain[0]} mm, today ${rain[1]} mm, tomorrow ${rain[2]} mm`);
-console.log(`Tomorrow: ${minTemp}°C to ${maxTemp}°C\n`);
-console.log(`Watering: ${watering}`);
+  const watering = getWateringAdvice(forecast);
+  const frost = getFrostAdvice(forecast);
 
-if (frost) {
-  console.log(`Frost: ${frost}`);
+  const rain = forecast.precipitation_sum;
+  const minTemp = forecast.temperature_2m_min[2];
+  const maxTemp = forecast.temperature_2m_max[2];
+
+  console.log(`\nGarden advice for ${postcode.toUpperCase()}\n`);
+  console.log(`Rain: yesterday ${rain[0]} mm, today ${rain[1]} mm, tomorrow ${rain[2]} mm`);
+  console.log(`Tomorrow: ${minTemp}°C to ${maxTemp}°C\n`);
+  console.log(`Watering: ${watering}`);
+
+  if (frost) {
+    console.log(`Frost: ${frost}`);
+  }
+} catch (error) {
+  if (error.message === 'fetch failed') {
+    console.error('Could not reach the postcode or weather service. Check your internet connection.');
+  } else {
+    console.error(`Error: ${error.message}`);
+  }
+  process.exitCode = 1;
 }
