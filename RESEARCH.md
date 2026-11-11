@@ -86,7 +86,11 @@ I pushed the project to GitHub, renamed the branch from `master` to `main`, and 
 2. **Following a stack trace.** When I tested an invalid postcode, the stack trace showed the error started in `postcode.js` line 5 and was called from `garden.js` line 4. I learned how to follow it back to the source.
 3. **Forecasts change during the day.** The rain values for the same days were different one hour later (2.5 mm became 0.7 mm). This means I can't test my rules with live data, so I will use fixed test data instead.
 
-## Day 3 – Wednesday 11 November 2026
+### Next steps
+- Turn my gardening rules into code (`src/advice.js`)
+- Show clear recommendations instead of raw data
+
+## Day 3 – Writing the rules, tests and error handling (11 Nov 2026)
 
 ### What I built
 - `src/advice.js`: watering and frost rules as pure functions. They take the Open-Meteo `daily` object and return advice text, with no API calls inside.
