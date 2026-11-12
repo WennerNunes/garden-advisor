@@ -114,3 +114,26 @@ I pushed the project to GitHub, renamed the branch from `master` to `main`, and 
 
 ### Next
 - GitHub Actions workflow to run the tests on every push.
+
+## Day 4 – Continuous integration with GitHub Actions (12 Nov 2026)
+
+### What I built
+- `.github/workflows/test.yml`: a workflow that runs `node --test` on every push and pull request to `main`.
+- It runs on a clean Ubuntu machine with Node 22, which proves the project does not depend on my computer.
+- No `npm install` step is needed, because the project has no external dependencies.
+
+### Proving that CI works
+A green check only shows that the tests passed; it does not prove that CI would catch a problem. So I broke the code on purpose:
+1. I created a branch called `test-ci-failure` and changed `>=` to `>` in the watering rule.
+2. Locally, the "exactly 10 mm" test failed, as expected.
+3. I opened a pull request (#1). GitHub Actions failed the check in about 6 seconds.
+4. I closed the PR without merging and deleted the branch. `main` was never broken.
+
+### What I learned
+- **Branches and pull requests** keep `main` safe while changes are checked.
+- **Exit codes connect everything.** A failing test makes `node --test` exit with code 1, and that is what turns the CI red.
+- **"Able to merge" is not "tests passed".** GitHub's merge check only looks for Git conflicts; it says nothing about the tests.
+- The merge button was still available even with a failing check. In a real team, a branch protection rule should block that.
+
+### Next
+- Add a branch protection rule so pull requests cannot be merged when the tests fail.
