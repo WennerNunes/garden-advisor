@@ -7,7 +7,7 @@ export function getWateringAdvice(daily) {
   const rainToday = daily.precipitation_sum[1];
   const rainTomorrow = daily.precipitation_sum[2];
 
-  if (rainYesterday + rainToday >= RAIN_THRESHOLD_MM) {
+  if (rainYesterday + rainToday > RAIN_THRESHOLD_MM) {
     return "No need to water";
   }
 
