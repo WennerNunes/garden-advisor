@@ -137,3 +137,22 @@ A green check only shows that the tests passed; it does not prove that CI would 
 
 ### Next
 - Add a branch protection rule so pull requests cannot be merged when the tests fail.
+
+## Day 5 – Documentation and final touches (13 Nov 2026)
+
+### What I did
+- **Branch protection (from day 4's "Next"):** a repository ruleset now protects `main`. The `test` check is required, and deletions and force pushes are blocked. As this is a solo project, the repository admin is on the bypass list, so my own pushes show a "Bypassed rule violations" notice.
+- **npm scripts:** `package.json` still had the default test script, which fails on purpose. I replaced it, so `npm test` runs the tests and `npm start -- "SW1A 1AA"` runs the tool. I also added a description and the required Node version.
+- **README.md:** usage, the rules, project structure, tests, error handling, CI and future improvements, with a live status badge.
+- **AI.md:** an honest account of how I used AI and how I checked its work.
+
+### Problems I ran into
+1. **PowerShell blocked `npm`.** Windows does not allow `.ps1` scripts by default, and in PowerShell `npm` is a `.ps1` file. Running `npm.cmd test` works without changing any security settings. I added this tip to the README.
+2. **`npm start` ignored the postcode.** I typed `--"SW1A 1AA"` without a space, so npm read it as one of its own options. With a space (`-- "SW1A 1AA"`), the postcode reaches the program.
+3. **A vague commit message.** After pushing, I noticed one message was less clear than I wanted. I left it, because changing a published commit would need a force push, which my own ruleset now blocks.
+
+### A good moment
+For the first time, the frost warning appeared with live data: tomorrow's minimum was 1.2°C, so the tool showed "Frost risk". The rule worked outside the tests too.
+
+### Next
+- Final review: clone the repository into a new folder, follow the README step by step, and check that everything works.
