@@ -1,13 +1,17 @@
 {
   "name": "garden-advisor",
   "version": "1.0.0",
+  "description": "CLI that gives gardening advice for a UK postcode based on the weather forecast",
   "type": "module",
-  "description": "",
   "main": "garden.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node garden.js",
+    "test": "node --test"
   },
-  "keywords": [],
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": ["gardening", "weather", "cli", "uk"],
   "author": "Wenner Nunes",
   "license": "ISC"
 }
